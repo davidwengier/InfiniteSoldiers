@@ -92,6 +92,7 @@ const infiniteSoldiersGame = (() => {
             const gameOverScoreValue = root.querySelector('[data-role="game-over-score-current"]');
             const gameOverScoreBestValue = root.querySelector('[data-role="game-over-score-best"]');
             const playAgainButton = root.querySelector('[data-action="play-again"]');
+            const resetStatsButton = root.querySelector('[data-action="reset-stats"]');
             const context = canvas?.getContext("2d", { alpha: false });
 
             if (!canvas || !context) {
@@ -122,6 +123,7 @@ const infiniteSoldiersGame = (() => {
             currentDrawingContext = context;
 
             listen(playAgainButton, "click", () => restartRun());
+            listen(resetStatsButton, "click", () => resetBestStats());
 
             listen(canvas, "pointerdown", onCanvasPointerDown);
             listen(canvas, "pointermove", onCanvasPointerMove);
@@ -1028,24 +1030,29 @@ const infiniteSoldiersGame = (() => {
                 squad: state.squad,
                 distance: {
                     current: currentDistance,
-                    best: Math.max(state.best.distance, currentDistance)
+                    best: state.best.distance
                 },
                 score: {
                     current: currentScore,
-                    best: Math.max(state.best.score, currentScore)
+                    best: state.best.score
                 }
             };
         }
 
         function updateBest() {
-            const summary = getRunSummary();
             const nextBest = {
-                score: summary.score.best,
-                distance: summary.distance.best
+                score: Math.max(state.best.score, Math.floor(state.score)),
+                distance: Math.max(state.best.distance, Math.floor(state.distance))
             };
 
             state.best = nextBest;
             saveBest(nextBest);
+        }
+
+        function resetBestStats() {
+            state.best = createEmptyBest();
+            saveBest(state.best);
+            syncGameOverDialog(false);
         }
 
         function updateHud() {
@@ -1056,7 +1063,7 @@ const infiniteSoldiersGame = (() => {
             scoreValue.textContent = formatNumber(summary.score.current);
         }
 
-        function syncGameOverDialog() {
+        function syncGameOverDialog(shouldFocusPlayAgain = true) {
             root.dataset.runState = state.status;
 
             if (!gameOverModal) {
@@ -1068,8 +1075,9 @@ const infiniteSoldiersGame = (() => {
             gameOverModal.setAttribute("aria-hidden", (!isVisible).toString());
 
             if (!isVisible) {
-                if (playAgainButton && document.activeElement === playAgainButton) {
-                    playAgainButton.blur();
+                if ((playAgainButton && document.activeElement === playAgainButton)
+                    || (resetStatsButton && document.activeElement === resetStatsButton)) {
+                    document.activeElement.blur();
                 }
 
                 return;
@@ -1082,7 +1090,7 @@ const infiniteSoldiersGame = (() => {
             gameOverScoreValue.textContent = formatNumber(summary.score.current);
             gameOverScoreBestValue.textContent = formatNumber(summary.score.best);
 
-            if (playAgainButton && document.activeElement !== playAgainButton) {
+            if (shouldFocusPlayAgain && playAgainButton && document.activeElement !== playAgainButton) {
                 playAgainButton.focus({ preventScroll: true });
             }
         }
@@ -1687,7 +1695,7 @@ const infiniteSoldiersGame = (() => {
                 const rawValue = window.localStorage.getItem(storageKey);
 
                 if (!rawValue) {
-                    return { score: 0, distance: 0 };
+                    return createEmptyBest();
                 }
 
                 const parsedValue = JSON.parse(rawValue);
@@ -1705,8 +1713,15 @@ const infiniteSoldiersGame = (() => {
                 };
             }
             catch {
-                return { score: 0, distance: 0 };
+                return createEmptyBest();
             }
+        }
+
+        function createEmptyBest() {
+            return {
+                score: 0,
+                distance: 0
+            };
         }
 
         function saveBest(best) {
