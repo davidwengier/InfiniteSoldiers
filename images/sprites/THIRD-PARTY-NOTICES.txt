@@ -1,6 +1,0 @@
-Soldier sprite references:
-- Source: "RPG Asset Character 'Soldier' SMS" by Chasersgaming
-- URL: https://opengameart.org/content/rpg-asset-character-soldier-sms
-- Downloaded file: https://opengameart.org/sites/default/files/SMS%20RPG%20Soldier%20FREE%20Files.zip
-- License: CC0 / Public Domain
-- Current local usage: enemy-small.svg, enemy-medium.svg, and enemy-large.svg are custom repo art.
