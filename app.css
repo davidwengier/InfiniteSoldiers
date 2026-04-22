@@ -1,6 +1,7 @@
 :root {
     color-scheme: dark;
     font-family: Inter, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-tap-highlight-color: transparent;
 }
 
 * {
@@ -14,6 +15,12 @@ body {
     height: 100%;
 }
 
+html {
+    touch-action: manipulation;
+    overscroll-behavior: none;
+    -webkit-text-size-adjust: 100%;
+}
+
 body {
     min-height: 100dvh;
     background:
@@ -22,6 +29,10 @@ body {
         linear-gradient(180deg, #020617 0%, #020817 36%, #02030a 100%);
     color: #f8fafc;
     overflow: hidden;
+    overscroll-behavior: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
 }
 
 a {
@@ -35,17 +46,29 @@ select {
     font: inherit;
 }
 
+button,
+canvas {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
 canvas {
     display: block;
 }
 
 .infinite-soldiers-page {
+    --page-gap: clamp(0.45rem, 1vw, 0.85rem);
     width: 100%;
     max-width: none;
     min-height: 100dvh;
     height: 100dvh;
     margin: 0;
-    padding: clamp(0.45rem, 1vw, 0.85rem);
+    padding:
+        calc(var(--page-gap) + env(safe-area-inset-top))
+        calc(var(--page-gap) + env(safe-area-inset-right))
+        calc(var(--page-gap) + env(safe-area-inset-bottom))
+        calc(var(--page-gap) + env(safe-area-inset-left));
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -207,6 +230,7 @@ canvas {
     transition: transform 120ms ease, background 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
     z-index: 2;
     cursor: pointer;
+    touch-action: manipulation;
 }
 
 .pause-fab {
