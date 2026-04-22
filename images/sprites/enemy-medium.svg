@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 128">
+  <defs>
+    <linearGradient id="medium-body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FDBA74"/>
+      <stop offset="100%" stop-color="#EA580C"/>
+    </linearGradient>
+    <linearGradient id="medium-cabin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FEF3C7"/>
+      <stop offset="100%" stop-color="#FCD34D"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="48" cy="118" rx="22" ry="6" fill="#111827" opacity=".28"/>
+  <path d="M28 12h40l12 18v56c0 16-13 30-30 30H46c-17 0-30-14-30-30V30Z" fill="#111827"/>
+  <path d="M32 18h32l10 16v48c0 14-11 26-26 26H48c-15 0-26-12-26-26V34Z" fill="url(#medium-body)"/>
+  <path d="M38 8h20l8 14v8H30v-8Z" fill="#7C2D12"/>
+  <rect x="35" y="34" width="26" height="24" rx="7" fill="url(#medium-cabin)"/>
+  <rect x="32" y="64" width="32" height="28" rx="8" fill="#FB923C"/>
+  <rect x="20" y="44" width="8" height="34" rx="4" fill="#1F2937"/>
+  <rect x="68" y="44" width="8" height="34" rx="4" fill="#1F2937"/>
+  <rect x="16" y="48" width="10" height="28" rx="5" fill="#374151"/>
+  <rect x="70" y="48" width="10" height="28" rx="5" fill="#374151"/>
+  <rect x="28" y="96" width="14" height="14" rx="5" fill="#FDE68A"/>
+  <rect x="54" y="96" width="14" height="14" rx="5" fill="#FDE68A"/>
+  <rect x="44" y="2" width="8" height="16" rx="3" fill="#FEF2F2"/>
+  <circle cx="48" cy="18" r="4" fill="#FDE68A"/>
+</svg>

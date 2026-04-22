@@ -27,7 +27,8 @@ const infiniteSoldiersGame = (() => {
     const spriteSources = {
         allySoldier: new URL("../images/sprites/ally-soldier.svg", import.meta.url).href,
         enemySmall: new URL("../images/sprites/enemy-small.png", import.meta.url).href,
-        enemyMedium: new URL("../images/sprites/enemy-medium.png", import.meta.url).href
+        enemyMedium: new URL("../images/sprites/enemy-medium.svg", import.meta.url).href,
+        enemyLarge: new URL("../images/sprites/enemy-large.svg", import.meta.url).href
     };
 
     let activeGame = null;
@@ -1343,10 +1344,15 @@ const infiniteSoldiersGame = (() => {
         function drawEnemies() {
             for (const enemy of state.enemies.slice().sort((leftEnemy, rightEnemy) => leftEnemy.y - rightEnemy.y)) {
                 const projection = projectPoint(enemy.x, enemy.y + (enemy.height * 0.42));
+                const isMediumEnemy = enemy.kind === "medium";
                 const isLargeEnemy = enemy.kind === "large";
-                const sprite = enemy.kind === "small" ? sprites.enemySmall : sprites.enemyMedium;
-                const minDrawWidth = isLargeEnemy ? 42 : enemy.kind === "medium" ? 20 : 15;
-                const minDrawHeight = isLargeEnemy ? 64 : enemy.kind === "medium" ? 30 : 20;
+                const sprite = enemy.kind === "small"
+                    ? sprites.enemySmall
+                    : isMediumEnemy
+                        ? sprites.enemyMedium
+                        : sprites.enemyLarge;
+                const minDrawWidth = isLargeEnemy ? 42 : isMediumEnemy ? 20 : 15;
+                const minDrawHeight = isLargeEnemy ? 64 : isMediumEnemy ? 30 : 20;
                 const drawWidth = Math.max(minDrawWidth, enemy.width * projection.scale * 0.92);
                 const drawHeight = Math.max(minDrawHeight, enemy.height * projection.scale * 0.92);
 
@@ -1360,7 +1366,7 @@ const infiniteSoldiersGame = (() => {
                 context.fill();
 
                 if (sprite) {
-                    if (isBehemoth) {
+                    if (isLargeEnemy) {
                         context.save();
                         context.shadowColor = hexToRgba(enemy.tint, enemy.hit > 0 ? 0.5 : 0.34);
                         context.shadowBlur = 14 + (projection.scale * 18);
@@ -1378,6 +1384,13 @@ const infiniteSoldiersGame = (() => {
                             Math.max(6, drawWidth * 0.14));
                         context.restore();
                     }
+                    else if (isMediumEnemy) {
+                        context.save();
+                        context.shadowColor = hexToRgba(enemy.tint, enemy.hit > 0 ? 0.3 : 0.2);
+                        context.shadowBlur = 8 + (projection.scale * 10);
+                        drawAnchoredImage(sprite, projection.x, projection.y + 2, drawWidth, drawHeight, enemy.hit > 0 ? 0.82 : 1);
+                        context.restore();
+                    }
                     else {
                         drawAnchoredImage(sprite, projection.x, projection.y + 3, drawWidth, drawHeight, enemy.hit > 0 ? 0.78 : 1);
                     }
@@ -1393,16 +1406,18 @@ const infiniteSoldiersGame = (() => {
 
                     context.fillStyle = "rgba(15, 23, 42, 0.7)";
                     context.fillRect(projection.x - (barWidth * 0.5), barY, barWidth, Math.max(3, projection.scale * 6));
-                    context.fillStyle = isBehemoth
+                    context.fillStyle = isLargeEnemy
                         ? (healthRatio > 0.45 ? "#ef4444" : healthRatio > 0.2 ? "#f97316" : "#facc15")
-                        : "#34d399";
+                        : isMediumEnemy
+                            ? "#f59e0b"
+                            : "#34d399";
                     context.fillRect(projection.x - (barWidth * 0.5), barY, barWidth * healthRatio, Math.max(3, projection.scale * 6));
 
-                    if (isBehemoth) {
+                    if (isLargeEnemy) {
                         context.fillStyle = "#fee2e2";
                         context.font = `bold ${Math.max(7, 7 + (projection.scale * 8))}px Inter, Segoe UI, sans-serif`;
                         context.textAlign = "center";
-                        context.fillText("ELITE", projection.x, barY - Math.max(4, projection.scale * 5));
+                        context.fillText("LARGE", projection.x, barY - Math.max(4, projection.scale * 5));
                     }
                 }
             }
