@@ -23,6 +23,7 @@ const infiniteSoldiersGame = (() => {
         farShoulderHalfWidth: 34
     };
     const maxSquad = 30;
+    const earlySoloEnemyDistance = 400;
     const spriteSources = {
         allySoldier: new URL("../images/sprites/ally-soldier.svg", import.meta.url).href,
         enemyBike: new URL("../images/sprites/enemy-bike.png", import.meta.url).href,
@@ -472,6 +473,19 @@ const infiniteSoldiersGame = (() => {
         }
 
         function buildEnemyFormation(formationPressure) {
+            if (state.distance < earlySoloEnemyDistance) {
+                return {
+                    kind: "swarm",
+                    units: [{
+                        kind: "bike",
+                        x: randomBetween(road.left + 28, road.right - 28),
+                        yOffset: 0
+                    }],
+                    rowCount: 1,
+                    depth: 0
+                };
+            }
+
             const behemothChance = clamp(0.0008 + (formationPressure * 0.006), 0.0008, 0.0068);
 
             if (Math.random() < behemothChance) {
