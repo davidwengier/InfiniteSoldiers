@@ -26,7 +26,7 @@ const infiniteSoldiersGame = (() => {
     const earlySoloEnemyDistance = 400;
     const spriteSources = {
         allySoldier: new URL("../images/sprites/ally-soldier.svg", import.meta.url).href,
-        enemySmall: new URL("../images/sprites/enemy-small.png", import.meta.url).href,
+        enemySmall: new URL("../images/sprites/enemy-small.svg", import.meta.url).href,
         enemyMedium: new URL("../images/sprites/enemy-medium.svg", import.meta.url).href,
         enemyLarge: new URL("../images/sprites/enemy-large.svg", import.meta.url).href
     };

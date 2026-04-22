@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 96">
+  <defs>
+    <linearGradient id="small-armor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F9A8D4"/>
+      <stop offset="100%" stop-color="#DB2777"/>
+    </linearGradient>
+    <linearGradient id="small-face" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#CBD5E1"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="32" cy="90" rx="14" ry="4" fill="#0F172A" opacity=".2"/>
+  <path d="M20 18c0-6.6 5.4-12 12-12s12 5.4 12 12v4H20Z" fill="#3B0764"/>
+  <rect x="22" y="16" width="20" height="6" rx="3" fill="#0F172A"/>
+  <circle cx="32" cy="24" r="9" fill="#0F172A"/>
+  <circle cx="32" cy="24" r="7" fill="url(#small-face)"/>
+  <path d="M18 42c0-7.7 6.3-14 14-14s14 6.3 14 14v18c0 5.5-4.5 10-10 10H28c-5.5 0-10-4.5-10-10Z" fill="#4A044E"/>
+  <path d="M22 42c0-5.5 4.5-10 10-10s10 4.5 10 10v18c0 3.3-2.7 6-6 6H28c-3.3 0-6-2.7-6-6Z" fill="url(#small-armor)"/>
+  <rect x="26" y="36" width="12" height="18" rx="4" fill="#FBCFE8"/>
+  <path d="M27 46h10" stroke="#9D174D" stroke-width="2" stroke-linecap="round"/>
+  <rect x="14" y="42" width="6" height="24" rx="3" fill="#111827"/>
+  <rect x="44" y="42" width="6" height="24" rx="3" fill="#111827"/>
+  <rect x="47" y="34" width="5" height="30" rx="2.5" fill="#E5E7EB"/>
+  <rect x="48.5" y="24" width="2" height="14" rx="1" fill="#1F2937"/>
+  <rect x="24" y="68" width="6" height="18" rx="3" fill="#111827"/>
+  <rect x="34" y="68" width="6" height="18" rx="3" fill="#111827"/>
+  <rect x="22" y="84" width="10" height="6" rx="3" fill="#475569"/>
+  <rect x="32" y="84" width="10" height="6" rx="3" fill="#475569"/>
+</svg>
