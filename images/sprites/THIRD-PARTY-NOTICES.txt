@@ -1,0 +1,6 @@
+Enemy soldier sprites:
+- Source: "RPG Asset Character 'Soldier' SMS" by Chasersgaming
+- URL: https://opengameart.org/content/rpg-asset-character-soldier-sms
+- Downloaded file: https://opengameart.org/sites/default/files/SMS%20RPG%20Soldier%20FREE%20Files.zip
+- License: CC0 / Public Domain
+- Local usage: enemy-bike.png and enemy-truck.png are cropped from the south-facing idle strip in the downloaded pack.

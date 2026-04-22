@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InfiniteSoldiers</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+    <main class="infinite-soldiers-page">
+        <section class="game-card">
+            <div class="game-root" data-infinite-soldiers-root>
+                <div class="game-hud">
+                    <div class="hud-item">
+                        <span class="hud-label">Squad</span>
+                        <strong class="hud-value" data-role="squad">2</strong>
+                    </div>
+                    <div class="hud-item">
+                        <span class="hud-label">Distance</span>
+                        <strong class="hud-value" data-role="distance">0m</strong>
+                    </div>
+                    <div class="hud-item">
+                        <span class="hud-label">Score</span>
+                        <strong class="hud-value" data-role="score">0</strong>
+                    </div>
+                    <div class="hud-item">
+                        <span class="hud-label">Best</span>
+                        <strong class="hud-value" data-role="best">0</strong>
+                    </div>
+                </div>
+
+                <div class="stage-shell">
+                    <canvas class="runner-canvas" data-role="canvas" width="420" height="720"></canvas>
+                    <button type="button" class="pause-fab" data-action="pause" aria-label="Pause run" title="Pause run">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M8 6v12" />
+                            <path d="M16 6v12" />
+                        </svg>
+                    </button>
+                    <button type="button" class="restart-fab" data-action="restart" aria-label="Restart run" title="Restart run">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M12 5a7 7 0 1 1-6.63 9.24" />
+                            <path d="M5.5 8.5V3.75H10.25" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
