@@ -1199,6 +1199,7 @@ const infiniteSoldiersGame = (() => {
 
             drawBackdrop();
             drawRoad();
+            drawRoadHorizonFade();
             drawBoardWaves();
             drawEnemies();
             drawBullets();
@@ -1305,6 +1306,19 @@ const infiniteSoldiersGame = (() => {
                     drawProjectedStrip(laneDividerX, markerY, markerY + 44, 7, "rgba(248, 250, 252, 0.34)");
                 }
             }
+        }
+
+        function drawRoadHorizonFade() {
+            const fadeTop = Math.max(0, perspective.horizonY - 28);
+            const fadeBottom = perspective.horizonY + 34;
+            const fade = context.createLinearGradient(0, fadeTop, 0, fadeBottom);
+            fade.addColorStop(0, "rgba(8, 47, 73, 0.98)");
+            fade.addColorStop(0.3, "rgba(11, 41, 65, 0.9)");
+            fade.addColorStop(0.68, "rgba(7, 23, 42, 0.38)");
+            fade.addColorStop(1, "rgba(2, 6, 23, 0)");
+
+            context.fillStyle = fade;
+            context.fillRect(0, 0, width, fadeBottom + 8);
         }
 
         function drawBoardWaves() {
