@@ -170,37 +170,11 @@ canvas {
     border-radius: 22px;
     padding: clamp(0.65rem, 1vh, 0.9rem) clamp(0.8rem, 1vw, 1rem);
     display: grid;
-    gap: 0.35rem;
-}
-
-.hud-split {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.55rem;
-    align-items: end;
-}
-
-.hud-stat {
-    min-width: 0;
-    display: grid;
-    gap: 0.15rem;
-}
-
-.hud-stat-best {
-    justify-items: end;
-    text-align: right;
-}
-
-.hud-caption {
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: rgba(148, 163, 184, 0.78);
+    gap: 0.25rem;
 }
 
 .hud-value {
-    font-size: clamp(0.9rem, 1.4vw, 1.35rem);
+    font-size: clamp(1rem, 1.7vw, 1.55rem);
     line-height: 1.1;
     color: #f8fafc;
 }
@@ -228,8 +202,8 @@ canvas {
     display: grid;
     place-items: center;
     padding: clamp(1rem, 2.4vw, 1.5rem);
-    background: rgba(2, 6, 23, 0.74);
-    backdrop-filter: blur(10px);
+    background:
+        radial-gradient(circle at center, rgba(2, 6, 23, 0.04) 0%, rgba(2, 6, 23, 0.12) 48%, rgba(2, 6, 23, 0.3) 100%);
 }
 
 .game-over-modal[hidden] {
@@ -239,9 +213,9 @@ canvas {
 .game-over-card {
     width: min(100%, 24rem);
     border-radius: 26px;
-    border: 1px solid rgba(125, 211, 252, 0.24);
-    background: linear-gradient(180deg, rgba(15, 23, 42, 0.96) 0%, rgba(7, 12, 24, 0.98) 100%);
-    box-shadow: 0 24px 60px rgba(2, 8, 23, 0.46);
+    border: 1px solid rgba(125, 211, 252, 0.28);
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.86) 0%, rgba(7, 12, 24, 0.92) 100%);
+    box-shadow: 0 24px 60px rgba(2, 8, 23, 0.34);
     padding: clamp(1rem, 2.6vw, 1.45rem);
     display: grid;
     gap: 0.85rem;
@@ -330,7 +304,7 @@ canvas {
 }
 
 .game-root[data-run-state="lost"] .runner-canvas {
-    filter: saturate(0.74) brightness(0.58);
+    filter: saturate(0.94) brightness(0.88);
 }
 
 .runner-canvas {
@@ -370,16 +344,8 @@ canvas {
         padding: 0.6rem 0.7rem;
     }
 
-    .hud-split {
-        gap: 0.4rem;
-    }
-
-    .hud-caption {
-        font-size: 0.56rem;
-    }
-
     .hud-value {
-        font-size: 0.88rem;
+        font-size: 0.98rem;
     }
 
     .stage-shell {

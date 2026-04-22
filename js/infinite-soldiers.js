@@ -84,14 +84,9 @@ const infiniteSoldiersGame = (() => {
         function createGame(root, sprites) {
             const canvas = root.querySelector('[data-role="canvas"]');
             const squadValue = root.querySelector('[data-role="squad-current"]');
-            const squadBestValue = root.querySelector('[data-role="squad-best"]');
             const distanceValue = root.querySelector('[data-role="distance-current"]');
-            const distanceBestValue = root.querySelector('[data-role="distance-best"]');
             const scoreValue = root.querySelector('[data-role="score-current"]');
-            const scoreBestValue = root.querySelector('[data-role="score-best"]');
             const gameOverModal = root.querySelector('[data-role="game-over"]');
-            const gameOverSquadValue = root.querySelector('[data-role="game-over-squad-current"]');
-            const gameOverSquadBestValue = root.querySelector('[data-role="game-over-squad-best"]');
             const gameOverDistanceValue = root.querySelector('[data-role="game-over-distance-current"]');
             const gameOverDistanceBestValue = root.querySelector('[data-role="game-over-distance-best"]');
             const gameOverScoreValue = root.querySelector('[data-role="game-over-score-current"]');
@@ -177,7 +172,6 @@ const infiniteSoldiersGame = (() => {
                 distance: 0,
                 score: 0,
                 squad: 2,
-                peakSquad: 2,
                 fireCooldown: 0.18,
                 nextEnemyAt: 46,
                 nextBoardAt: 102,
@@ -1027,16 +1021,11 @@ const infiniteSoldiersGame = (() => {
         }
 
         function getRunSummary() {
-            state.peakSquad = Math.max(state.peakSquad, state.squad);
-
             const currentDistance = Math.floor(state.distance);
             const currentScore = Math.floor(state.score);
 
             return {
-                squad: {
-                    current: state.squad,
-                    best: Math.max(state.best.squad, state.peakSquad)
-                },
+                squad: state.squad,
                 distance: {
                     current: currentDistance,
                     best: Math.max(state.best.distance, currentDistance)
@@ -1051,7 +1040,6 @@ const infiniteSoldiersGame = (() => {
         function updateBest() {
             const summary = getRunSummary();
             const nextBest = {
-                squad: summary.squad.best,
                 score: summary.score.best,
                 distance: summary.distance.best
             };
@@ -1063,12 +1051,9 @@ const infiniteSoldiersGame = (() => {
         function updateHud() {
             const summary = getRunSummary();
 
-            squadValue.textContent = summary.squad.current.toString();
-            squadBestValue.textContent = summary.squad.best.toString();
+            squadValue.textContent = summary.squad.toString();
             distanceValue.textContent = `${summary.distance.current}m`;
-            distanceBestValue.textContent = `${summary.distance.best}m`;
             scoreValue.textContent = formatNumber(summary.score.current);
-            scoreBestValue.textContent = formatNumber(summary.score.best);
         }
 
         function syncGameOverDialog() {
@@ -1092,8 +1077,6 @@ const infiniteSoldiersGame = (() => {
 
             const summary = getRunSummary();
 
-            gameOverSquadValue.textContent = summary.squad.current.toString();
-            gameOverSquadBestValue.textContent = summary.squad.best.toString();
             gameOverDistanceValue.textContent = `${summary.distance.current}m`;
             gameOverDistanceBestValue.textContent = `${summary.distance.best}m`;
             gameOverScoreValue.textContent = formatNumber(summary.score.current);
@@ -1704,27 +1687,25 @@ const infiniteSoldiersGame = (() => {
                 const rawValue = window.localStorage.getItem(storageKey);
 
                 if (!rawValue) {
-                    return { squad: 2, score: 0, distance: 0 };
+                    return { score: 0, distance: 0 };
                 }
 
                 const parsedValue = JSON.parse(rawValue);
 
                 if (typeof parsedValue === "number") {
                     return {
-                        squad: 2,
                         score: parsedValue,
                         distance: 0
                     };
                 }
 
                 return {
-                    squad: Number(parsedValue.squad) || 2,
                     score: Number(parsedValue.score) || 0,
                     distance: Number(parsedValue.distance) || 0
                 };
             }
             catch {
-                return { squad: 2, score: 0, distance: 0 };
+                return { score: 0, distance: 0 };
             }
         }
 
