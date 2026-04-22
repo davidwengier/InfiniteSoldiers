@@ -89,8 +89,14 @@ const infiniteSoldiersGame = (() => {
             const distanceBestValue = root.querySelector('[data-role="distance-best"]');
             const scoreValue = root.querySelector('[data-role="score-current"]');
             const scoreBestValue = root.querySelector('[data-role="score-best"]');
-            const pauseButton = root.querySelector('[data-action="pause"]');
-            const restartButton = root.querySelector('[data-action="restart"]');
+            const gameOverModal = root.querySelector('[data-role="game-over"]');
+            const gameOverSquadValue = root.querySelector('[data-role="game-over-squad-current"]');
+            const gameOverSquadBestValue = root.querySelector('[data-role="game-over-squad-best"]');
+            const gameOverDistanceValue = root.querySelector('[data-role="game-over-distance-current"]');
+            const gameOverDistanceBestValue = root.querySelector('[data-role="game-over-distance-best"]');
+            const gameOverScoreValue = root.querySelector('[data-role="game-over-score-current"]');
+            const gameOverScoreBestValue = root.querySelector('[data-role="game-over-score-best"]');
+            const playAgainButton = root.querySelector('[data-action="play-again"]');
             const context = canvas?.getContext("2d", { alpha: false });
 
             if (!canvas || !context) {
@@ -120,8 +126,7 @@ const infiniteSoldiersGame = (() => {
             context.imageSmoothingEnabled = true;
             currentDrawingContext = context;
 
-            listen(restartButton, "click", () => restartRun());
-            listen(pauseButton, "click", () => togglePause());
+            listen(playAgainButton, "click", () => restartRun());
 
             listen(canvas, "pointerdown", onCanvasPointerDown);
             listen(canvas, "pointermove", onCanvasPointerMove);
@@ -133,7 +138,6 @@ const infiniteSoldiersGame = (() => {
             listen(window, "keyup", onKeyUp);
 
             startRun(state.targetX);
-            syncPauseButton();
             drawScene();
             animationFrameId = window.requestAnimationFrame(frame);
         }
@@ -190,14 +194,27 @@ const infiniteSoldiersGame = (() => {
 
         function startRun(startX) {
             const clampedX = clamp(startX, playerBounds.minX, playerBounds.maxX);
+            resetControls();
             state = createRunState(state.best, clampedX);
             state.status = "running";
             updateHud();
-            syncPauseButton();
+            syncGameOverDialog();
         }
 
         function restartRun() {
             startRun(state.playerX);
+        }
+
+        function resetControls() {
+            controls.left = false;
+            controls.right = false;
+
+            if (controls.pointerId !== null && typeof canvas.hasPointerCapture === "function" && canvas.hasPointerCapture(controls.pointerId)) {
+                canvas.releasePointerCapture(controls.pointerId);
+            }
+
+            controls.pointerActive = false;
+            controls.pointerId = null;
         }
 
         function togglePause() {
@@ -206,32 +223,11 @@ const infiniteSoldiersGame = (() => {
             }
 
             state.paused = !state.paused;
-            controls.left = false;
-            controls.right = false;
-            controls.pointerActive = false;
-            controls.pointerId = null;
-            syncPauseButton();
-        }
-
-        function syncPauseButton() {
-            if (!pauseButton) {
-                return;
-            }
-
-            pauseButton.setAttribute("aria-label", state.paused ? "Resume run" : "Pause run");
-            pauseButton.setAttribute("title", state.paused ? "Resume run" : "Pause run");
-            pauseButton.innerHTML = state.paused
-                ? `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M8 6l10 6-10 6z" />
-                   </svg>`
-                : `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M8 6v12" />
-                        <path d="M16 6v12" />
-                   </svg>`;
+            resetControls();
         }
 
         function onCanvasPointerDown(event) {
-            if (state.paused) {
+            if (state.paused || state.status === "lost") {
                 return;
             }
 
@@ -244,7 +240,7 @@ const infiniteSoldiersGame = (() => {
             canvas.setPointerCapture(event.pointerId);
             updatePointerTarget(event);
 
-            if (state.status !== "running") {
+            if (state.status === "ready") {
                 startRun(state.targetX);
             }
         }
@@ -279,7 +275,11 @@ const infiniteSoldiersGame = (() => {
                 event.preventDefault();
                 togglePause();
             }
-            else if (state.paused) {
+            else if (key === "r") {
+                event.preventDefault();
+                restartRun();
+            }
+            else if (state.paused || state.status === "lost") {
                 return;
             }
             else if (key === "arrowleft" || key === "a") {
@@ -287,7 +287,7 @@ const infiniteSoldiersGame = (() => {
                 controls.left = true;
                 controls.pointerActive = false;
 
-                if (state.status !== "running") {
+                if (state.status === "ready") {
                     startRun(state.targetX);
                 }
             }
@@ -296,14 +296,11 @@ const infiniteSoldiersGame = (() => {
                 controls.right = true;
                 controls.pointerActive = false;
 
-                if (state.status !== "running") {
+                if (state.status === "ready") {
                     startRun(state.targetX);
                 }
             }
-            else if (key === "r") {
-                restartRun();
-            }
-            else if ((key === " " || key === "enter") && state.status !== "running") {
+            else if ((key === " " || key === "enter") && state.status === "ready") {
                 event.preventDefault();
                 startRun(state.targetX);
             }
@@ -1021,19 +1018,42 @@ const infiniteSoldiersGame = (() => {
             }
 
             state.status = "lost";
+            resetControls();
             updateBest();
             updateHud();
-            spawnPopup(state.playerX, convoyY - 148, "Convoy wiped", "#fb7185");
-            spawnPopup(state.playerX, convoyY - 118, "Press restart to go again", "#fecdd3");
+            state.popups = [];
 
-            syncPauseButton();
+            syncGameOverDialog();
+        }
+
+        function getRunSummary() {
+            state.peakSquad = Math.max(state.peakSquad, state.squad);
+
+            const currentDistance = Math.floor(state.distance);
+            const currentScore = Math.floor(state.score);
+
+            return {
+                squad: {
+                    current: state.squad,
+                    best: Math.max(state.best.squad, state.peakSquad)
+                },
+                distance: {
+                    current: currentDistance,
+                    best: Math.max(state.best.distance, currentDistance)
+                },
+                score: {
+                    current: currentScore,
+                    best: Math.max(state.best.score, currentScore)
+                }
+            };
         }
 
         function updateBest() {
+            const summary = getRunSummary();
             const nextBest = {
-                squad: Math.max(state.best.squad, state.peakSquad),
-                score: Math.max(state.best.score, Math.floor(state.score)),
-                distance: Math.max(state.best.distance, Math.floor(state.distance))
+                squad: summary.squad.best,
+                score: summary.score.best,
+                distance: summary.distance.best
             };
 
             state.best = nextBest;
@@ -1041,18 +1061,47 @@ const infiniteSoldiersGame = (() => {
         }
 
         function updateHud() {
-            state.peakSquad = Math.max(state.peakSquad, state.squad);
+            const summary = getRunSummary();
 
-            const bestSquad = Math.max(state.best.squad, state.peakSquad);
-            const bestDistance = Math.max(state.best.distance, Math.floor(state.distance));
-            const bestScore = Math.max(state.best.score, Math.floor(state.score));
+            squadValue.textContent = summary.squad.current.toString();
+            squadBestValue.textContent = summary.squad.best.toString();
+            distanceValue.textContent = `${summary.distance.current}m`;
+            distanceBestValue.textContent = `${summary.distance.best}m`;
+            scoreValue.textContent = formatNumber(summary.score.current);
+            scoreBestValue.textContent = formatNumber(summary.score.best);
+        }
 
-            squadValue.textContent = state.squad.toString();
-            squadBestValue.textContent = bestSquad.toString();
-            distanceValue.textContent = `${Math.floor(state.distance)}m`;
-            distanceBestValue.textContent = `${bestDistance}m`;
-            scoreValue.textContent = formatNumber(Math.floor(state.score));
-            scoreBestValue.textContent = formatNumber(bestScore);
+        function syncGameOverDialog() {
+            root.dataset.runState = state.status;
+
+            if (!gameOverModal) {
+                return;
+            }
+
+            const isVisible = state.status === "lost";
+            gameOverModal.hidden = !isVisible;
+            gameOverModal.setAttribute("aria-hidden", (!isVisible).toString());
+
+            if (!isVisible) {
+                if (playAgainButton && document.activeElement === playAgainButton) {
+                    playAgainButton.blur();
+                }
+
+                return;
+            }
+
+            const summary = getRunSummary();
+
+            gameOverSquadValue.textContent = summary.squad.current.toString();
+            gameOverSquadBestValue.textContent = summary.squad.best.toString();
+            gameOverDistanceValue.textContent = `${summary.distance.current}m`;
+            gameOverDistanceBestValue.textContent = `${summary.distance.best}m`;
+            gameOverScoreValue.textContent = formatNumber(summary.score.current);
+            gameOverScoreBestValue.textContent = formatNumber(summary.score.best);
+
+            if (playAgainButton && document.activeElement !== playAgainButton) {
+                playAgainButton.focus({ preventScroll: true });
+            }
         }
 
         function updatePopups(deltaTime) {

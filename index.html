@@ -63,18 +63,28 @@
 
                 <div class="stage-shell">
                     <canvas class="runner-canvas" data-role="canvas" width="420" height="720"></canvas>
-                    <button type="button" class="pause-fab" data-action="pause" aria-label="Pause run" title="Pause run">
-                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                            <path d="M8 6v12" />
-                            <path d="M16 6v12" />
-                        </svg>
-                    </button>
-                    <button type="button" class="restart-fab" data-action="restart" aria-label="Restart run" title="Restart run">
-                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                            <path d="M12 5a7 7 0 1 1-6.63 9.24" />
-                            <path d="M5.5 8.5V3.75H10.25" />
-                        </svg>
-                    </button>
+                    <div class="game-over-modal" data-role="game-over" hidden aria-hidden="true">
+                        <div class="game-over-card" role="dialog" aria-modal="true" aria-labelledby="game-over-title">
+                            <span class="game-over-kicker">Run ended</span>
+                            <h2 class="game-over-title" id="game-over-title">Convoy wiped</h2>
+                            <p class="game-over-copy">Your run is over. Check the final numbers, then head straight back out.</p>
+                            <div class="game-over-grid" role="group" aria-label="Final run stats">
+                                <span class="game-over-grid-heading"></span>
+                                <span class="game-over-grid-heading">Value</span>
+                                <span class="game-over-grid-heading">Best</span>
+                                <span class="game-over-grid-label">Squad</span>
+                                <strong class="game-over-grid-value" data-role="game-over-squad-current">0</strong>
+                                <strong class="game-over-grid-value game-over-grid-value-best" data-role="game-over-squad-best">0</strong>
+                                <span class="game-over-grid-label">Distance</span>
+                                <strong class="game-over-grid-value" data-role="game-over-distance-current">0m</strong>
+                                <strong class="game-over-grid-value game-over-grid-value-best" data-role="game-over-distance-best">0m</strong>
+                                <span class="game-over-grid-label">Score</span>
+                                <strong class="game-over-grid-value" data-role="game-over-score-current">0</strong>
+                                <strong class="game-over-grid-value game-over-grid-value-best" data-role="game-over-score-best">0</strong>
+                            </div>
+                            <button type="button" class="game-over-button" data-action="play-again">Play again</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
