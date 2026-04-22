@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Infinite Soldiers icon">
+  <defs>
+    <linearGradient id="bg" x1="64" y1="48" x2="448" y2="464" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="24%" r="70%">
+      <stop offset="0%" stop-color="#22D3EE" stop-opacity=".34"/>
+      <stop offset="55%" stop-color="#8B5CF6" stop-opacity=".18"/>
+      <stop offset="100%" stop-color="#020617" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="helmet" x1="256" y1="116" x2="256" y2="344" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#94A3B8"/>
+    </linearGradient>
+    <linearGradient id="crest" x1="256" y1="112" x2="256" y2="176" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#67E8F9"/>
+      <stop offset="100%" stop-color="#0EA5E9"/>
+    </linearGradient>
+    <linearGradient id="visor" x1="256" y1="214" x2="256" y2="272" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#67E8F9"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+  </defs>
+  <rect x="32" y="32" width="448" height="448" rx="112" fill="url(#bg)"/>
+  <rect x="32" y="32" width="448" height="448" rx="112" fill="url(#glow)"/>
+  <rect x="36" y="36" width="440" height="440" rx="108" fill="none" stroke="rgba(148, 163, 184, 0.16)" stroke-width="8"/>
+  <path d="M152 372c10-35 43-60 80-60h48c37 0 70 25 80 60v20H152Z" fill="#0B1120" opacity=".84"/>
+  <path d="M160 190c0-73 43-126 96-126s96 53 96 126v38c0 40-21 76-55 96l-19 11h-44l-19-11c-34-20-55-56-55-96Z" fill="url(#helmet)"/>
+  <path d="M198 116h116c10 0 19 7 22 17l8 26H168l8-26c3-10 12-17 22-17Z" fill="url(#crest)"/>
+  <rect x="176" y="208" width="160" height="68" rx="22" fill="#0F172A"/>
+  <path d="M194 218h124c12 0 19 14 11 24l-20 26H203l-20-26c-8-10-1-24 11-24Z" fill="url(#visor)"/>
+  <path d="M206 286h100l-22 28h-56Z" fill="#1E293B"/>
+  <rect x="144" y="216" width="24" height="96" rx="12" fill="#64748B"/>
+  <rect x="344" y="216" width="24" height="96" rx="12" fill="#64748B"/>
+  <path d="M220 86h72l18 30H202Z" fill="#38BDF8" opacity=".92"/>
+  <circle cx="256" cy="164" r="10" fill="#F8FAFC" opacity=".55"/>
+</svg>
