@@ -19,8 +19,8 @@ const infiniteSoldiersGame = (() => {
         floorY: height - 18,
         farWorldY: -160,
         nearWorldY: height + 112,
-        farRoadHalfWidth: 18,
-        farShoulderHalfWidth: 34
+        farRoadHalfWidth: 0.5,
+        farShoulderHalfWidth: 4
     };
     const maxSquad = 30;
     const earlySoloEnemyDistance = 400;
