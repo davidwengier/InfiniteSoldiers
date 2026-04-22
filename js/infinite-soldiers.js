@@ -26,8 +26,8 @@ const infiniteSoldiersGame = (() => {
     const earlySoloEnemyDistance = 400;
     const spriteSources = {
         allySoldier: new URL("../images/sprites/ally-soldier.svg", import.meta.url).href,
-        enemyBike: new URL("../images/sprites/enemy-bike.png", import.meta.url).href,
-        enemyTruck: new URL("../images/sprites/enemy-truck.png", import.meta.url).href
+        enemySmall: new URL("../images/sprites/enemy-small.png", import.meta.url).href,
+        enemyMedium: new URL("../images/sprites/enemy-medium.png", import.meta.url).href
     };
 
     let activeGame = null;
@@ -480,7 +480,7 @@ const infiniteSoldiersGame = (() => {
                 return {
                     kind: "swarm",
                     units: [{
-                        kind: "bike",
+                        kind: "small",
                         x: randomBetween(road.left + 28, road.right - 28),
                         yOffset: 0
                     }],
@@ -489,14 +489,14 @@ const infiniteSoldiersGame = (() => {
                 };
             }
 
-            const behemothChance = clamp(0.0008 + (formationPressure * 0.006), 0.0008, 0.0068);
+            const largeEnemyChance = clamp(0.0008 + (formationPressure * 0.006), 0.0008, 0.0068);
 
-            if (Math.random() < behemothChance) {
+            if (Math.random() < largeEnemyChance) {
                 return buildEscortFormation(
-                    "behemoth",
+                    "large",
                     randomIntBetween(10, Math.max(12, Math.round(lerp(16, 28, formationPressure)))),
                     formationPressure,
-                    "behemoth-assault");
+                    "large-assault");
             }
 
             const roll = Math.random();
@@ -509,14 +509,14 @@ const infiniteSoldiersGame = (() => {
 
             if (roll < lerp(0.96, 0.78, formationPressure)) {
                 return buildEscortFormation(
-                    "truck",
+                    "medium",
                     randomIntBetween(6, Math.max(8, Math.round(lerp(14, 24, formationPressure)))),
                     formationPressure,
-                    "heavy-squad");
+                    "medium-escort");
             }
 
             return buildEscortFormation(
-                "truck",
+                "medium",
                 randomIntBetween(10, Math.max(12, Math.round(lerp(20, 36, formationPressure)))),
                 formationPressure,
                 "siege-column");
@@ -538,7 +538,7 @@ const infiniteSoldiersGame = (() => {
             return {
                 kind: "swarm",
                 units: cluster.slots.map((slot) => ({
-                    kind: "bike",
+                    kind: "small",
                     x: slot.x,
                     yOffset: slot.yOffset
                 })),
@@ -550,21 +550,21 @@ const infiniteSoldiersGame = (() => {
         function buildEscortFormation(centerKind, escortCount, formationPressure, kind) {
             const cluster = createEnemyClusterSlots(escortCount + 1, {
                 minColumns: 3,
-                maxColumns: centerKind === "behemoth" ? 5 : escortCount >= 18 ? 6 : 5,
-                columnSpacing: centerKind === "behemoth" ? lerp(38, 32, formationPressure) : lerp(36, 30, formationPressure),
-                rowSpacing: centerKind === "behemoth" ? lerp(48, 40, formationPressure) : lerp(44, 36, formationPressure),
+                maxColumns: centerKind === "large" ? 5 : escortCount >= 18 ? 6 : 5,
+                columnSpacing: centerKind === "large" ? lerp(38, 32, formationPressure) : lerp(36, 30, formationPressure),
+                rowSpacing: centerKind === "large" ? lerp(48, 40, formationPressure) : lerp(44, 36, formationPressure),
                 staggerFactor: 0.42,
-                sideLag: centerKind === "behemoth" ? 3.2 : 2.6,
+                sideLag: centerKind === "large" ? 3.2 : 2.6,
                 xJitter: 2.2,
                 yJitter: 1.6,
-                edgePadding: centerKind === "behemoth" ? 34 : 26
+                edgePadding: centerKind === "large" ? 34 : 26
             });
             const leaderIndex = getFormationLeaderSlot(cluster);
 
             return {
                 kind,
                 units: cluster.slots.map((slot, index) => ({
-                    kind: index === leaderIndex ? centerKind : "bike",
+                    kind: index === leaderIndex ? centerKind : "small",
                     x: slot.x,
                     yOffset: slot.yOffset
                 })),
@@ -650,7 +650,7 @@ const infiniteSoldiersGame = (() => {
         }
 
         function spawnEnemyFormation(formation, difficulty, intensity) {
-            const startY = formation.kind === "behemoth-assault"
+            const startY = formation.kind === "large-assault"
                 ? -156
                 : formation.kind === "swarm"
                     ? -76
@@ -662,11 +662,11 @@ const infiniteSoldiersGame = (() => {
         }
 
         function getEnemyFormationSpacing(formation, formationPressure) {
-            const baseGap = formation.kind === "behemoth-assault"
+            const baseGap = formation.kind === "large-assault"
                 ? lerp(130, 98, formationPressure)
                 : formation.kind === "siege-column"
                     ? lerp(102, 74, formationPressure)
-                    : formation.kind === "heavy-squad"
+                    : formation.kind === "medium-escort"
                         ? lerp(84, 62, formationPressure)
                         : lerp(68, 52, formationPressure);
             const rowGap = Math.max(0, formation.rowCount - 1) * lerp(18, 12, formationPressure);
@@ -675,7 +675,7 @@ const infiniteSoldiersGame = (() => {
         }
 
         function createEnemy(trackX, kind, y, difficulty, intensity) {
-            if (kind === "behemoth") {
+            if (kind === "large") {
                 const health = 150 + Math.floor(difficulty * (13 + (intensity * 7)));
 
                 return {
@@ -697,7 +697,7 @@ const infiniteSoldiersGame = (() => {
                 };
             }
 
-            if (kind === "truck") {
+            if (kind === "medium") {
                 const health = 9 + Math.floor(difficulty * (2.4 + (intensity * 1.0)));
                 const damage = 7 + Math.floor(difficulty * (1.55 + (intensity * 0.55)));
 
@@ -1343,10 +1343,10 @@ const infiniteSoldiersGame = (() => {
         function drawEnemies() {
             for (const enemy of state.enemies.slice().sort((leftEnemy, rightEnemy) => leftEnemy.y - rightEnemy.y)) {
                 const projection = projectPoint(enemy.x, enemy.y + (enemy.height * 0.42));
-                const isBehemoth = enemy.kind === "behemoth";
-                const sprite = enemy.kind === "bike" ? sprites.enemyBike : sprites.enemyTruck;
-                const minDrawWidth = isBehemoth ? 42 : enemy.kind === "truck" ? 20 : 15;
-                const minDrawHeight = isBehemoth ? 64 : enemy.kind === "truck" ? 30 : 20;
+                const isLargeEnemy = enemy.kind === "large";
+                const sprite = enemy.kind === "small" ? sprites.enemySmall : sprites.enemyMedium;
+                const minDrawWidth = isLargeEnemy ? 42 : enemy.kind === "medium" ? 20 : 15;
+                const minDrawHeight = isLargeEnemy ? 64 : enemy.kind === "medium" ? 30 : 20;
                 const drawWidth = Math.max(minDrawWidth, enemy.width * projection.scale * 0.92);
                 const drawHeight = Math.max(minDrawHeight, enemy.height * projection.scale * 0.92);
 
@@ -1354,9 +1354,9 @@ const infiniteSoldiersGame = (() => {
                     continue;
                 }
 
-                context.fillStyle = isBehemoth ? "rgba(15, 23, 42, 0.26)" : "rgba(2, 8, 23, 0.18)";
+                context.fillStyle = isLargeEnemy ? "rgba(15, 23, 42, 0.26)" : "rgba(2, 8, 23, 0.18)";
                 context.beginPath();
-                context.ellipse(projection.x, projection.y + 4, drawWidth * (isBehemoth ? 0.32 : 0.28), Math.max(2, projection.scale * (isBehemoth ? 7 : 5)), 0, 0, Math.PI * 2);
+                context.ellipse(projection.x, projection.y + 4, drawWidth * (isLargeEnemy ? 0.32 : 0.28), Math.max(2, projection.scale * (isLargeEnemy ? 7 : 5)), 0, 0, Math.PI * 2);
                 context.fill();
 
                 if (sprite) {
