@@ -21,19 +21,42 @@
                 <div class="game-hud">
                     <div class="hud-item">
                         <span class="hud-label">Squad</span>
-                        <strong class="hud-value" data-role="squad">2</strong>
+                        <div class="hud-split" role="group" aria-label="Squad stats">
+                            <div class="hud-stat">
+                                <span class="hud-caption">Now</span>
+                                <strong class="hud-value" data-role="squad-current">2</strong>
+                            </div>
+                            <div class="hud-stat hud-stat-best">
+                                <span class="hud-caption">Best</span>
+                                <strong class="hud-value" data-role="squad-best">2</strong>
+                            </div>
+                        </div>
                     </div>
                     <div class="hud-item">
                         <span class="hud-label">Distance</span>
-                        <strong class="hud-value" data-role="distance">0m</strong>
+                        <div class="hud-split" role="group" aria-label="Distance stats">
+                            <div class="hud-stat">
+                                <span class="hud-caption">Now</span>
+                                <strong class="hud-value" data-role="distance-current">0m</strong>
+                            </div>
+                            <div class="hud-stat hud-stat-best">
+                                <span class="hud-caption">Best</span>
+                                <strong class="hud-value" data-role="distance-best">0m</strong>
+                            </div>
+                        </div>
                     </div>
                     <div class="hud-item">
                         <span class="hud-label">Score</span>
-                        <strong class="hud-value" data-role="score">0</strong>
-                    </div>
-                    <div class="hud-item">
-                        <span class="hud-label">Best</span>
-                        <strong class="hud-value" data-role="best">0</strong>
+                        <div class="hud-split" role="group" aria-label="Score stats">
+                            <div class="hud-stat">
+                                <span class="hud-caption">Now</span>
+                                <strong class="hud-value" data-role="score-current">0</strong>
+                            </div>
+                            <div class="hud-stat hud-stat-best">
+                                <span class="hud-caption">Best</span>
+                                <strong class="hud-value" data-role="score-best">0</strong>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

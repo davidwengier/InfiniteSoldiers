@@ -162,7 +162,7 @@ canvas {
 
 .game-hud {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: clamp(0.5rem, 0.9vw, 0.8rem);
 }
 
@@ -173,8 +173,35 @@ canvas {
     gap: 0.35rem;
 }
 
+.hud-split {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+    align-items: end;
+}
+
+.hud-stat {
+    min-width: 0;
+    display: grid;
+    gap: 0.15rem;
+}
+
+.hud-stat-best {
+    justify-items: end;
+    text-align: right;
+}
+
+.hud-caption {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(148, 163, 184, 0.78);
+}
+
 .hud-value {
-    font-size: clamp(1rem, 1.6vw, 1.55rem);
+    font-size: clamp(0.9rem, 1.4vw, 1.35rem);
+    line-height: 1.1;
     color: #f8fafc;
 }
 
@@ -267,7 +294,7 @@ canvas {
 
 @media (max-width: 780px) {
     .game-hud {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.45rem;
     }
 }
 
@@ -278,6 +305,22 @@ canvas {
 
     .game-card {
         border-radius: 24px;
+    }
+
+    .hud-item {
+        padding: 0.6rem 0.7rem;
+    }
+
+    .hud-split {
+        gap: 0.4rem;
+    }
+
+    .hud-caption {
+        font-size: 0.56rem;
+    }
+
+    .hud-value {
+        font-size: 0.88rem;
     }
 
     .stage-shell {

@@ -82,10 +82,12 @@ const infiniteSoldiersGame = (() => {
 
         function createGame(root, sprites) {
             const canvas = root.querySelector('[data-role="canvas"]');
-            const squadValue = root.querySelector('[data-role="squad"]');
-            const distanceValue = root.querySelector('[data-role="distance"]');
-            const scoreValue = root.querySelector('[data-role="score"]');
-            const bestValue = root.querySelector('[data-role="best"]');
+            const squadValue = root.querySelector('[data-role="squad-current"]');
+            const squadBestValue = root.querySelector('[data-role="squad-best"]');
+            const distanceValue = root.querySelector('[data-role="distance-current"]');
+            const distanceBestValue = root.querySelector('[data-role="distance-best"]');
+            const scoreValue = root.querySelector('[data-role="score-current"]');
+            const scoreBestValue = root.querySelector('[data-role="score-best"]');
             const pauseButton = root.querySelector('[data-action="pause"]');
             const restartButton = root.querySelector('[data-action="restart"]');
             const context = canvas?.getContext("2d", { alpha: false });
@@ -170,6 +172,7 @@ const infiniteSoldiersGame = (() => {
                 distance: 0,
                 score: 0,
                 squad: 2,
+                peakSquad: 2,
                 fireCooldown: 0.18,
                 nextEnemyAt: 46,
                 nextBoardAt: 102,
@@ -1027,6 +1030,7 @@ const infiniteSoldiersGame = (() => {
 
         function updateBest() {
             const nextBest = {
+                squad: Math.max(state.best.squad, state.peakSquad),
                 score: Math.max(state.best.score, Math.floor(state.score)),
                 distance: Math.max(state.best.distance, Math.floor(state.distance))
             };
@@ -1036,10 +1040,18 @@ const infiniteSoldiersGame = (() => {
         }
 
         function updateHud() {
+            state.peakSquad = Math.max(state.peakSquad, state.squad);
+
+            const bestSquad = Math.max(state.best.squad, state.peakSquad);
+            const bestDistance = Math.max(state.best.distance, Math.floor(state.distance));
+            const bestScore = Math.max(state.best.score, Math.floor(state.score));
+
             squadValue.textContent = state.squad.toString();
+            squadBestValue.textContent = bestSquad.toString();
             distanceValue.textContent = `${Math.floor(state.distance)}m`;
+            distanceBestValue.textContent = `${bestDistance}m`;
             scoreValue.textContent = formatNumber(Math.floor(state.score));
-            bestValue.textContent = formatNumber(state.best.score);
+            scoreBestValue.textContent = formatNumber(bestScore);
         }
 
         function updatePopups(deltaTime) {
@@ -1628,17 +1640,27 @@ const infiniteSoldiersGame = (() => {
                 const rawValue = window.localStorage.getItem(storageKey);
 
                 if (!rawValue) {
-                    return { score: 0, distance: 0 };
+                    return { squad: 2, score: 0, distance: 0 };
                 }
 
                 const parsedValue = JSON.parse(rawValue);
+
+                if (typeof parsedValue === "number") {
+                    return {
+                        squad: 2,
+                        score: parsedValue,
+                        distance: 0
+                    };
+                }
+
                 return {
+                    squad: Number(parsedValue.squad) || 2,
                     score: Number(parsedValue.score) || 0,
                     distance: Number(parsedValue.distance) || 0
                 };
             }
             catch {
-                return { score: 0, distance: 0 };
+                return { squad: 2, score: 0, distance: 0 };
             }
         }
 
